@@ -1,10 +1,7 @@
 package utils;
 
-import mapppers.ActorMapper;
-import model.Actor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.sql.*;
 import java.util.*;
@@ -39,33 +36,11 @@ public class DBUtils {
 		}
 	}
 
-	public static List<Map<String, Object>> executeQueryForMapList(String query) {
-		List<Map<String, Object>> result = new ArrayList<>();
-		try (Connection connection = getConnection();
-				PreparedStatement statement = connection.prepareStatement(query);
-				ResultSet resultSet = statement.executeQuery()) {
-
-			ResultSetMetaData metaData = resultSet.getMetaData();
-			while (resultSet.next()) {
-				Map<String, Object> row = new HashMap<>();
-				for (int i = 0; i < metaData.getColumnCount(); i++) {
-					row.put(metaData.getColumnName(i), resultSet.getObject(i));
-				}
-				result.add(row);
-			}
-		}
-		catch (SQLException e) {
-			logger.error("SQLException while getting date for executeQueryForMapList method from result!");
-		}
-
-		return result;
-	}
-
-	public static List<T> executeQuery(String query, RowMapper<T> rowMapper) {
+	public static <T> List<T> executeQuery(String query, RowMapper<T> rowMapper) {
 		List<T> result = new ArrayList<>();
 		try (Connection connection = getConnection();
-				PreparedStatement statement = connection.prepareStatement(query);
-				ResultSet resultSet = statement.executeQuery()) {
+			 PreparedStatement statement = connection.prepareStatement(query);
+			 ResultSet resultSet = statement.executeQuery()) {
 
 			while (resultSet.next()) {
 				result.add(rowMapper.mapRow(resultSet));
@@ -78,4 +53,35 @@ public class DBUtils {
 		return result;
 	}
 
+
+
+
+
+
+
+
+
+
+
+//	public static List<Map<String, Object>> executeQueryForMapList(String query) {
+//		List<Map<String, Object>> result = new ArrayList<>();
+//		try (Connection connection = getConnection();
+//				PreparedStatement statement = connection.prepareStatement(query);
+//				ResultSet resultSet = statement.executeQuery()) {
+//
+//			ResultSetMetaData metaData = resultSet.getMetaData();
+//			while (resultSet.next()) {
+//				Map<String, Object> row = new HashMap<>();
+//				for (int i = 0; i < metaData.getColumnCount(); i++) {
+//					row.put(metaData.getColumnName(i), resultSet.getObject(i));
+//				}
+//				result.add(row);
+//			}
+//		}
+//		catch (SQLException e) {
+//			logger.error("SQLException while getting date for executeQueryForMapList method from result!");
+//		}
+//
+//		return result;
+//	}
 }
